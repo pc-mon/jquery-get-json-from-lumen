@@ -1,0 +1,73 @@
+<!-- This is a first example of using a template -->
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+        <meta charset="utf-8" />
+        <script src="js/jquery-2.1.4.min.js"></script>
+        <script src="js/handlebars-v3.0.3.js"></script>
+
+        <script src="js/bootstrap.min.js"></script>
+        <script src="AnimalsData.js"></script>
+        <script src="assignment.js"></script>
+
+        <link href="css/bootstrap.css" rel="stylesheet">
+        <link href="assignment.css" rel="stylesheet">
+
+    </head>
+
+    <body>
+        <div class="container-fluid">
+
+            <form id="sendpost">
+                <div class="form-group">
+                    <label for="title">title</label>
+                    <input type="text" class="form-control" id="title" name="title" placeholder="title">
+                </div>
+                <div class="form-group">
+                    <label for="author">author</label>
+                    <input type="text" class="form-control" id="author" name="author" placeholder="author">
+                </div> 
+                <div class="form-group">
+                    <label for="description">description</label>
+                    <textarea class="form-control" id="description" name="description" placeholder="description"></textarea>
+                </div> 
+                <button type="submit" class="btn btn-default">Submit</button>
+            </form>
+            <script id="navbar-template" type="text/x-handlebars-template">
+         
+                    {{#each books}}
+                        <div class='col-md-3'>{{title}} - {{author}}<p>{{created_at}} - {{updated_at}}</p><p>{{description}}</p></div>
+                    {{/each}}
+          
+            </script>
+
+            <div id="test">
+            </div>
+            <div id="r"></div>
+        </div>
+        <script>
+
+
+$.get(
+        "http://localhost/bookr/public/books",
+        function (data) {
+        var source = $("#navbar-template").html();
+        var template = Handlebars.compile(source);
+        var books = [];
+        books = {'books': data};
+        var html = template(books);
+        $("#test").html(html);
+        }
+);
+$("#sendpost").submit(function(){
+    $.post("http://localhost/bookr/public/books", $("#sendpost").serialize(), function(data){
+    console.log($("#sendpost").serialize()); $("#r").html('sucess');
+    return false;
+    });
+});
+
+        </script>
+    </body>
+</html>
